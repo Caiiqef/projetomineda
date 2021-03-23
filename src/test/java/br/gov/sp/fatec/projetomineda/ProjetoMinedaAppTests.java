@@ -37,9 +37,9 @@ class ProjetoMinedaAppTests {
     @Autowired
     private SegurancaService segService;
 
-	// @Test
-	// void contextLoads() {
-    // }
+	@Test
+	void contextLoads() {
+    }
 
     @Test
     void testaInsercao(){
@@ -125,21 +125,6 @@ class ProjetoMinedaAppTests {
         assertNotNull(cliente);
     }
 
-    //Transação cria um novo pedido e adiciona o pedido criado a um cliente. 
-    // @Test
-    // void testaServicoCriaPedido(){
-    //     Pedido pedido = segService.criarPedido("000005", 10.90, "caiquefernandes@gmail.com");
-    //     assertNotNull(pedido);
-    // }
-
-    // Consulta com 2 parâmetros -> PedidoRepository
-    // @Test
-    // void buscaPedidoPorNomeEIdQuery(){
-    //     Pedido pedido = pedRepo.buscaPedidoPorNomeEId("000001", 1);
-    //     assertNotNull(pedido);    
-    // }
-
-    // Consulta com Join Cliente e Pedido -> ClienteRepository
     @Test
     void testaBuscaClienteNomePedidoQuery(){
         Cliente cliente = clienteRepo.buscaPorNomePedido("000001");
