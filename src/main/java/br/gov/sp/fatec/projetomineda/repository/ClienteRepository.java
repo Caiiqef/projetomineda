@@ -22,6 +22,9 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     @Query("select c from  Cliente c where c.nome = ?1 ")
     public Cliente buscaClientePorNome (String nome);
 
+    @Query("select c from Cliente c where c.id = ?1")
+    public Cliente buscarClientePorId(Long id);
+
     @Query("select c from Cliente c where c.nome = ?1 and c.senha = ?2")
     public Cliente buscaClientePorNomeESenha (String nome, String senha);
 
@@ -31,7 +34,6 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     @Query("select c from  Cliente c where c.email = ?1 ")
     public Cliente buscarClientePorEmail (String email);
 
-    @Query("select c from Cliente c inner join c.pedidos p where p.desc = ?1")
-    public Cliente buscaPorNomePedido(String pedido);
-
+    // @Query("select c from Cliente c inner join c.pedidos p where p.desc = ?1")
+    // public Cliente buscaPorNomePedido(String pedido);
 }

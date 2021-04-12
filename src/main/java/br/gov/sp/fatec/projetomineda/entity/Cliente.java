@@ -13,24 +13,31 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import br.gov.sp.fatec.projetomineda.controller.View;
+
 @Entity
 @Table(name = "cliente")
 public class Cliente {
 
+    @JsonView(View.ClienteCompleto.class)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cliente_id")
     private Long id;
 
+    @JsonView({View.ClienteResumo.class, View.AutorizacaoResumo.class, View.PedidoLista.class})
     @Column(name = "cliente_nome")
     private String nome;
 
+    @JsonView({View.ClienteCompleto.class, View.PedidoLista.class})
     @Column(name = "cliente_email")
     private String email;
 
     @Column(name = "cliente_senha")
     private String senha;
 
+    @JsonView(View.ClienteResumo.class)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "cau_cliente_autorizacao",
         joinColumns = { @JoinColumn(name = "cliente_id")},
@@ -38,6 +45,7 @@ public class Cliente {
         )
     private Set<Autorizacao> autorizacoes;
 
+    @JsonView(View.ClienteResumo.class)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "cliente_pedido",
         joinColumns = {@JoinColumn(name = "cliente_id")},

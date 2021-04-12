@@ -11,6 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import br.gov.sp.fatec.projetomineda.controller.View;
+
 @Entity
 @Table(name = "autorizacao")
 public class Autorizacao {
@@ -20,9 +23,11 @@ public class Autorizacao {
     @Column(name = "autorizacao_id")
     private Long id;
 
+    @JsonView({View.ClienteResumo.class, View.AutorizacaoResumo.class, })
     @Column(name = "autorizacao_nome")
     private String nome;
 
+    @JsonView({View.AutorizacaoResumo.class})
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "autorizacoes")
     private Set<Cliente> clientes;
 

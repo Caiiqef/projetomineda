@@ -12,22 +12,29 @@ import javax.persistence.ManyToMany;
 
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import br.gov.sp.fatec.projetomineda.controller.View;
+
 
 @Entity
 @Table(name = "pedido")
 public class Pedido {
     
+    @JsonView(View.PedidoLista.class)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pedido_id")
     private Long id;
 
+    @JsonView({View.ClienteResumo.class, View.PedidoLista.class})
     @Column(name = "pedido_desc")
     private String desc;
 
+    @JsonView({View.ClienteResumo.class, View.PedidoLista.class})
     @Column(name = "pedido_price")
     private double price; 
     
+    @JsonView({View.PedidoLista.class})
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "pedidos")
     private Set<Cliente> clientes;
     

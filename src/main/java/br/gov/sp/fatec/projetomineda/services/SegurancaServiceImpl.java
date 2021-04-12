@@ -1,6 +1,8 @@
 package br.gov.sp.fatec.projetomineda.services;
 
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import br.gov.sp.fatec.projetomineda.entity.Cliente;
 import br.gov.sp.fatec.projetomineda.repository.AutorizacaoRepository;
 import br.gov.sp.fatec.projetomineda.repository.ClienteRepository;
 import br.gov.sp.fatec.projetomineda.repository.PedidoRepository;
+import br.gov.sp.fatec.projetomineda.exception.RegNotFoundException;
 
 @Service("SegurancaService")
 public class SegurancaServiceImpl implements SegurancaService {
@@ -37,7 +40,6 @@ public class SegurancaServiceImpl implements SegurancaService {
         cliente.setNome(nome);
         cliente.setEmail(email);
         cliente.setSenha(senha);
-        //HashSet não permite ter elementos iguais.
         cliente.setAutorizacoes(new HashSet<Autorizacao>());
         cliente.getAutorizacoes().add(aut);
         clienteRepo.save(cliente);
@@ -58,10 +60,70 @@ public class SegurancaServiceImpl implements SegurancaService {
             pedidoRepo.save(pedido);
             clienteRepo.save(cliente);   
             return pedido;      
-        }
-        
-        else{
-            return null;
         }        
-    }    
+        throw new RegNotFoundException("Cliente não encontrado");
+    }
+    
+    @Override
+    public List<Cliente> buscarTodosClientes(){
+        return clienteRepo.findAll();
+    }
+
+    @Override
+    public List<Autorizacao>  listarAutorizacoes(){
+        return autRepo.findAll();
+    }
+
+    @Override
+    public Cliente buscarClientePorId(Long id){
+        Optional<Cliente> clienteOp = clienteRepo.findById(id);
+        if(clienteOp.isPresent()) {
+            return clienteOp.get();            
+        }
+        throw new RegNotFoundException("Cliente não encontrado!");
+    }
+
+    @Override
+    public Cliente buscarClientePorNome(String nome){
+        Cliente cliente = clienteRepo.findByNome(nome);
+        if(cliente != null) {
+            return cliente;            
+        }
+        throw new RegNotFoundException("Cliente não encontrado!");
+    }
+
+    @Override
+    public Autorizacao buscarAutorizacaoPorNome(String nome){
+        Autorizacao autorizacao = autRepo.findByNome(nome);
+        if(autorizacao != null){
+            return autorizacao;
+        }
+        throw new RegNotFoundException("Autorizacao não encontrada!");
+    }
+
+    @Override
+    public List<Pedido> listarPedidos(){
+        return pedidoRepo.findAll();
+    }
+
+
+    @Override
+    public Pedido buscarPedidoPorId(Long id){
+        Pedido pedido = pedidoRepo.buscarPedidoPorId(id);
+        if(pedido != null) {
+            return pedido;           
+        }
+        throw new RegNotFoundException("Pedido não encontrado!");
+    }
+
+    @Override
+    public Pedido buscarPedidoPorDescricao(String desc){
+        Pedido pedido = pedidoRepo.buscarPedidoPorDescricao(desc);
+        if(pedido != null){
+            return pedido;
+        }
+        throw new RegNotFoundException("Pedido não encontrado!");
+    }
+
+
 }

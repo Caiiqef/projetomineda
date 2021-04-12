@@ -48,6 +48,7 @@ class ProjetoMinedaAppTests {
         cliente.setEmail("fernando@gmail.com");
         cliente.setSenha("senha");
         cliente.setAutorizacoes(new HashSet<Autorizacao>());
+
         Autorizacao aut = new Autorizacao();        
         aut.setNome("USERUSER");
         autRepo.save(aut);
@@ -62,7 +63,8 @@ class ProjetoMinedaAppTests {
         cliente.setNome("Felipe");
         cliente.setEmail("felipe@gmail.com");
         cliente.setSenha("1234");
-        clienteRepo.save(cliente);        
+        clienteRepo.save(cliente);
+        
         Autorizacao aut = new Autorizacao();        
         aut.setNome("USERUSER33");
         aut.setCliente(new HashSet<Cliente>());
