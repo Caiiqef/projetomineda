@@ -44,7 +44,6 @@ public class SegurancaServiceImpl implements SegurancaService {
         cliente.getAutorizacoes().add(aut);
         clienteRepo.save(cliente);
         return cliente;
-
     }
 
     @Transactional
@@ -62,6 +61,28 @@ public class SegurancaServiceImpl implements SegurancaService {
             return pedido;      
         }        
         throw new RegNotFoundException("Cliente não encontrado");
+    }
+
+    public Cliente atualizarCliente(String nome, String email, String senha, Long id){
+        Cliente cliente = clienteRepo.buscarClientePorId(id);
+        if(cliente != null){
+            cliente.setNome(nome);
+            cliente.setEmail(email);
+            cliente.setSenha(senha);
+            clienteRepo.save(cliente);
+            return cliente;
+        }
+        throw new RegNotFoundException("Cliente não encontrado!");
+    }
+
+    public Pedido atualizarValorPedido(double price, Long id){
+        Pedido pedido = pedidoRepo.buscarPedidoPorId(id);
+        if (pedido != null) {
+            pedido.setPrice(price);
+            pedidoRepo.save(pedido);
+            return pedido;            
+        }
+        throw new RegNotFoundException("Pedido não encontrado!");
     }
     
     @Override
@@ -116,6 +137,8 @@ public class SegurancaServiceImpl implements SegurancaService {
         throw new RegNotFoundException("Pedido não encontrado!");
     }
 
+    
+
     @Override
     public Pedido buscarPedidoPorDescricao(String desc){
         Pedido pedido = pedidoRepo.buscarPedidoPorDescricao(desc);
@@ -125,5 +148,29 @@ public class SegurancaServiceImpl implements SegurancaService {
         throw new RegNotFoundException("Pedido não encontrado!");
     }
 
+    public Pedido deletePedido(Long id){
+        Optional<Pedido> pedido = pedidoRepo.findById(id);
+        if(pedido.isPresent()){
+            pedidoRepo.deleteById(pedido.get().getId());
+            return pedido.get();
+        }
+        throw new RegNotFoundException("Pedido inexistente");
+    }
 
+    public Cliente deleteCliente(Long id){
+        Optional<Cliente> cliente = clienteRepo.findById(id);
+        if(cliente.isPresent()){
+            clienteRepo.deleteById(cliente.get().getId());
+            return cliente.get();
+        }
+        throw new RegNotFoundException("Cliente inexistente");
+    }
+
+    public Cliente atualizarCliente(Cliente cliente, Cliente novoCliente) {
+        // cliente.setNome(novoCliente.getNome());
+        cliente.setEmail(novoCliente.getEmail());
+        // cliente.setSenha(novoCliente.getSenha());
+        clienteRepo.save(cliente);
+        return cliente;
+    }
 }

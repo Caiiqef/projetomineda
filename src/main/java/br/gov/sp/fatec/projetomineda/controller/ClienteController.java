@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,9 +54,21 @@ public class ClienteController {
             cliente = segurancaService.criarCliente(cliente.getNome(), cliente.getEmail(), cliente.getSenha(), "ROLE_USER");
             HttpHeaders responseHeaders = new HttpHeaders();
             responseHeaders.setLocation(
-                uriComponentsBuilder.path("/cliente/" + cliente.getId()).build().toUri());
-            
-                
+                uriComponentsBuilder.path("/cliente/" + cliente.getId()).build().toUri());                
         return new ResponseEntity<Cliente>(cliente, responseHeaders, HttpStatus.CREATED);
-    }   
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Cliente> deleteCliente(@PathVariable Long id){
+        Cliente deleteCliente = segurancaService.deleteCliente(id);
+        return new ResponseEntity<Cliente>(deleteCliente, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Cliente> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente, UriComponentsBuilder uriComponentsBuilder) throws Exception {
+        cliente = segurancaService.atualizarEmailCliente(cliente.getEmail(), id);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setLocation(uriComponentsBuilder.path("/cliente/" + cliente.getId()).build().toUri());
+        return new ResponseEntity<Cliente>(cliente, responseHeaders, HttpStatus.CREATED);
+    }
 }

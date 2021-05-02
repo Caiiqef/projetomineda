@@ -14,7 +14,7 @@ unique key uni_cliente_email (cliente_email)
 );
 
 create table pedido(
-  pedido_id bigint unsigned not null auto_increment,
+  pedido_id bigint unsigned auto_increment,
   pedido_desc varchar(50) not null,
   pedido_price float not null,  
   primary key (pedido_id),

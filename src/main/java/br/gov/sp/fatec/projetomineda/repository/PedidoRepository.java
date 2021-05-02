@@ -20,4 +20,6 @@ public interface PedidoRepository extends JpaRepository <Pedido, Long> {
 
     @Query("select p from Pedido p where p.desc =?1")
     public Pedido buscarPedidoPorDescricao(String desc);
+
+    public Optional<Pedido> findById(Long id);
 }

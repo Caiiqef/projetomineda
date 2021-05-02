@@ -23,7 +23,7 @@ public class Pedido {
     @JsonView(View.PedidoLista.class)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "pedido_id")
+    @Column(name = "pedido_id", unique = true, nullable = false)
     private Long id;
 
     @JsonView({View.ClienteResumo.class, View.PedidoLista.class})

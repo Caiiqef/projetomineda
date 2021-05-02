@@ -7,17 +7,24 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 
 import br.gov.sp.fatec.projetomineda.entity.Pedido;
 import br.gov.sp.fatec.projetomineda.services.SegurancaService;
 
 @RestController
 @RequestMapping(value = "/pedido")
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class PedidoController {
 
     @Autowired
@@ -42,9 +49,25 @@ public class PedidoController {
     }
 
     @PostMapping
-    public Pedido cadastrarNovoPedido(@RequestBody Pedido pedido) throws Exception {
-        return segurancaService.criarPedido(pedido.getDesc(), pedido.getPrice(), "caiquefernandes@gmail.com");
+    public ResponseEntity<Pedido> cadastrarNovoPedido(@RequestBody Pedido pedido, UriComponentsBuilder uriComponentsBuilder) throws Exception {
+        pedido = segurancaService.criarPedido(pedido.getDesc(), pedido.getPrice(), "caiquefernandes@gmail.com");
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setLocation(uriComponentsBuilder.path("/pedido/" + pedido.getId()).build().toUri());
+        return new ResponseEntity<Pedido>(pedido, responseHeaders, HttpStatus.CREATED);
+    }    
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Pedido> deletePedido(@PathVariable Long id){
+        Pedido deletePedido = segurancaService.deletePedido(id);
+        return new ResponseEntity<Pedido>(deletePedido, HttpStatus.OK);
     }
-   
-    
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Pedido> atualizarPedido(@PathVariable Long id, @RequestBody Pedido pedido, UriComponentsBuilder uriComponentsBuilder) throws Exception {
+        pedido = segurancaService.atualizarValorPedido(pedido.getPrice(), id);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setLocation(uriComponentsBuilder.path("/pedido/" + pedido.getId()).build().toUri());
+        return new ResponseEntity<Pedido>(pedido, responseHeaders, HttpStatus.CREATED);
+    }
+
 }

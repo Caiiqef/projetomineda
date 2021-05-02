@@ -14,12 +14,14 @@ public interface SegurancaService {
     public List<Cliente> buscarTodosClientes();
     public Cliente buscarClientePorId(Long id);
     public Cliente buscarClientePorNome(String nome);
+    public Cliente deleteCliente(Long id);
 
     public Autorizacao buscarAutorizacaoPorNome(String nome);
     public List<Autorizacao> listarAutorizacoes();
 
     public List<Pedido> listarPedidos();
-
     public Pedido buscarPedidoPorId(Long id);
     public Pedido buscarPedidoPorDescricao(String desc);
+    public Pedido atualizarValorPedido(double price, Long id);
+    public Pedido deletePedido(Long id);
 }

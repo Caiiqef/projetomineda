@@ -53,7 +53,6 @@ public class Cliente {
         )
     private Set<Pedido> pedidos;
 
-
     public Long getId() {
         return this.id;
     }
