@@ -48,7 +48,7 @@ public class PedidoController {
         return segurancaService.buscarPedidoPorId(id);
     }
 
-    @PostMapping
+    @PostMapping("")
     public ResponseEntity<Pedido> cadastrarNovoPedido(@RequestBody Pedido pedido, UriComponentsBuilder uriComponentsBuilder) throws Exception {
         pedido = segurancaService.criarPedido(pedido.getDesc(), pedido.getPrice(), "caiquefernandes@gmail.com");
         HttpHeaders responseHeaders = new HttpHeaders();

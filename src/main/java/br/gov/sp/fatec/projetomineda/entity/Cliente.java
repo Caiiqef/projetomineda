@@ -34,6 +34,7 @@ public class Cliente {
     @Column(name = "cliente_email")
     private String email;
 
+    @JsonView({View.ClienteCompleto.class})
     @Column(name = "cliente_senha")
     private String senha;
 

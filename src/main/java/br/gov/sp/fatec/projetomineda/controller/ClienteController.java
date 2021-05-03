@@ -48,7 +48,7 @@ public class ClienteController {
         return segurancaService.buscarClientePorNome(nome);
     }
 
-    @PostMapping
+    @PostMapping("")
     public ResponseEntity<Cliente> cadastrarNovoCliente(@RequestBody Cliente cliente,
         UriComponentsBuilder uriComponentsBuilder){
             cliente = segurancaService.criarCliente(cliente.getNome(), cliente.getEmail(), cliente.getSenha(), "ROLE_USER");
