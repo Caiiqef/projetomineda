@@ -13,7 +13,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
     public Cliente findByNome(String nome);
 
-    public Optional<Cliente> findById(Long id);
+    // public Optional<Cliente> findById(Long id);
 
     public Cliente findByNomeAndSenha(String nome, String senha);
 

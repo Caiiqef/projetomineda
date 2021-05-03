@@ -64,11 +64,14 @@ public class ClienteController {
         return new ResponseEntity<Cliente>(deleteCliente, HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Cliente> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente, UriComponentsBuilder uriComponentsBuilder) throws Exception {
-        cliente = segurancaService.atualizarEmailCliente(cliente.getEmail(), id);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setLocation(uriComponentsBuilder.path("/cliente/" + cliente.getId()).build().toUri());
-        return new ResponseEntity<Cliente>(cliente, responseHeaders, HttpStatus.CREATED);
-    }
+    // @PutMapping(path = "/{id}")
+    // public ResponseEntity<Cliente> updateCliente(@PathVariable String nome, 
+    //     @RequestBody Cliente cliente, UriComponentsBuilder uriComponentsBuilder)
+    //     throws Exception{
+    //         cliente = segurancaService.updateCliente(cliente.getNome());
+    //         HttpHeaders responHeaders = new HttpHeaders();
+    //         responHeaders.setLocation(uriComponentsBuilder.path(
+    //             "/cliente/" + cliente.getNome()).build().toUri());
+    //         return new ResponseEntity<Cliente>(cliente, responHeaders, HttpStatus.CREATED);
+    //     }
 }

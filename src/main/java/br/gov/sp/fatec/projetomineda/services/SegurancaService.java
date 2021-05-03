@@ -15,6 +15,7 @@ public interface SegurancaService {
     public Cliente buscarClientePorId(Long id);
     public Cliente buscarClientePorNome(String nome);
     public Cliente deleteCliente(Long id);
+    // public Cliente updateCliente(String nome);
 
     public Autorizacao buscarAutorizacaoPorNome(String nome);
     public List<Autorizacao> listarAutorizacoes();

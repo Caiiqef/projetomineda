@@ -148,6 +148,7 @@ public class SegurancaServiceImpl implements SegurancaService {
         throw new RegNotFoundException("Pedido não encontrado!");
     }
 
+    @Override
     public Pedido deletePedido(Long id){
         Optional<Pedido> pedido = pedidoRepo.findById(id);
         if(pedido.isPresent()){
@@ -166,11 +167,22 @@ public class SegurancaServiceImpl implements SegurancaService {
         throw new RegNotFoundException("Cliente inexistente");
     }
 
-    public Cliente atualizarCliente(Cliente cliente, Cliente novoCliente) {
-        // cliente.setNome(novoCliente.getNome());
-        cliente.setEmail(novoCliente.getEmail());
-        // cliente.setSenha(novoCliente.getSenha());
-        clienteRepo.save(cliente);
-        return cliente;
-    }
+    // public Cliente atualizarCliente(Cliente cliente, Cliente novoCliente) {
+    //     // cliente.setNome(novoCliente.getNome());
+    //     cliente.setEmail(novoCliente.getEmail());
+    //     // cliente.setSenha(novoCliente.getSenha());
+    //     clienteRepo.save(cliente);
+    //     return cliente;
+    // }
+
+    // @Transactional
+    // public Cliente updatCliente(String nome, String email, String senha) {
+
+    //     Cliente cliente = new Cliente();
+    //     cliente.setNome(nome);
+    //     cliente.setEmail(email);
+    //     cliente.setSenha(senha);
+    //     clienteRepo.save(cliente);
+    //     return cliente;
+    // }  
 }
