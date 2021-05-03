@@ -49,11 +49,12 @@ public class PedidoController {
     }
 
     @PostMapping
+    @JsonView(View.PedidoLista.class)
     public ResponseEntity<Pedido> cadastrarNovoPedido(@RequestBody Pedido pedido, UriComponentsBuilder uriComponentsBuilder) throws Exception {
         pedido = segurancaService.criarPedido(pedido.getDesc(), pedido.getPrice(), "caiquefernandes@gmail.com");
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(uriComponentsBuilder.path("/pedido/" + pedido.getId()).build().toUri());
-        return new ResponseEntity<Pedido>(pedido, responseHeaders, HttpStatus.CREATED);
+        return new ResponseEntity<>(pedido, responseHeaders, HttpStatus.CREATED);
     }    
 
     @DeleteMapping("/{id}")
