@@ -63,6 +63,7 @@ public class PedidoController {
         return new ResponseEntity<Pedido>(deletePedido, HttpStatus.OK);
     }
 
+    @JsonView(View.PedidoLista.class)
     @PutMapping("/{id}")
     public ResponseEntity<Pedido> atualizarPedido(@PathVariable Long id, @RequestBody Pedido pedido, UriComponentsBuilder uriComponentsBuilder) throws Exception {
         pedido = segurancaService.atualizarValorPedido(pedido.getPrice(), id);
@@ -70,5 +71,4 @@ public class PedidoController {
         responseHeaders.setLocation(uriComponentsBuilder.path("/pedido/" + pedido.getId()).build().toUri());
         return new ResponseEntity<Pedido>(pedido, responseHeaders, HttpStatus.CREATED);
     }
-
 }
