@@ -56,6 +56,8 @@ public class SegurancaServiceImpl implements SegurancaService {
             pedido.setPrice(price);
             cliente.setPedidos(new HashSet<Pedido>());
             cliente.getPedidos().add(pedido);
+            pedido.setCliente(new HashSet<Cliente>());
+            pedido.getCliente().add(cliente);
             pedidoRepo.save(pedido);
             clienteRepo.save(cliente);   
             return pedido;      
@@ -152,6 +154,13 @@ public class SegurancaServiceImpl implements SegurancaService {
     public Pedido deletePedido(Long id){
         Optional<Pedido> pedido = pedidoRepo.findById(id);
         if(pedido.isPresent()){
+            Pedido p = pedido.get();
+            for (Cliente cliente : pedido.get().getCliente()) {
+                p.removeCliente(cliente);
+                clienteRepo.save(cliente);
+            }
+            pedidoRepo.save(p);
+
             pedidoRepo.deleteById(pedido.get().getId());
             return pedido.get();
         }

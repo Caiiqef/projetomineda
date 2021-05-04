@@ -34,8 +34,9 @@ public class Pedido {
     @Column(name = "pedido_price")
     private double price; 
     
-    @JsonView({View.PedidoLista.class})
+
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "pedidos")
+    @JsonView({View.PedidoLista.class})
     private Set<Cliente> clientes;
     
 
@@ -65,6 +66,11 @@ public class Pedido {
 
     public Set<Cliente> getCliente(){
         return this.clientes;
+    }
+
+    public void removeCliente(Cliente c) {
+        clientes.remove(c);
+        c.getPedidos().remove(this);
     }
 
     public void setCliente(Set<Cliente> clientes){
