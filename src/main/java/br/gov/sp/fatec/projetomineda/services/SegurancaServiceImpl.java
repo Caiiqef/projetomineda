@@ -103,7 +103,7 @@ public class SegurancaServiceImpl implements SegurancaService {
     }
     
     @Override
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<Cliente> buscarTodosClientes(){
         return clienteRepo.findAll();
     }
