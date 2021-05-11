@@ -3,10 +3,18 @@ package br.gov.sp.fatec.projetomineda.services;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.User;
 
 import br.gov.sp.fatec.projetomineda.entity.Autorizacao;
 import br.gov.sp.fatec.projetomineda.entity.Pedido;
@@ -28,7 +36,11 @@ public class SegurancaServiceImpl implements SegurancaService {
     @Autowired
     private PedidoRepository pedidoRepo;
 
+    @Autowired
+    private PasswordEncoder passEncoder;
+
     @Transactional
+    @PreAuthorize("isAuthenticated()")
     public Cliente criarCliente(String nome, String email, String senha, String autorizacao) {
         Autorizacao aut = autRepo.findByNome(autorizacao);
         if (aut == null) {
@@ -39,7 +51,7 @@ public class SegurancaServiceImpl implements SegurancaService {
         Cliente cliente = new Cliente();
         cliente.setNome(nome);
         cliente.setEmail(email);
-        cliente.setSenha(senha);
+        cliente.setSenha(passEncoder.encode(senha));
         cliente.setAutorizacoes(new HashSet<Autorizacao>());
         cliente.getAutorizacoes().add(aut);
         clienteRepo.save(cliente);
@@ -47,6 +59,7 @@ public class SegurancaServiceImpl implements SegurancaService {
     }
 
     @Transactional
+    @PreAuthorize("isAuthenticated()")
     public Pedido criarPedido(String desc, double price, String email) {
         Cliente cliente = clienteRepo.buscarClientePorEmail(email);
         Pedido pedido = new Pedido();
@@ -65,6 +78,7 @@ public class SegurancaServiceImpl implements SegurancaService {
         throw new RegNotFoundException("Cliente não encontrado");
     }
 
+    @PreAuthorize("isAuthenticated()")
     public Cliente atualizarCliente(String nome, String email, String senha, Long id){
         Cliente cliente = clienteRepo.buscarClientePorId(id);
         if(cliente != null){
@@ -77,6 +91,7 @@ public class SegurancaServiceImpl implements SegurancaService {
         throw new RegNotFoundException("Cliente não encontrado!");
     }
 
+    @PreAuthorize("isAuthenticated()")
     public Pedido atualizarValorPedido(double price, Long id){
         Pedido pedido = pedidoRepo.buscarPedidoPorId(id);
         if (pedido != null) {
@@ -88,16 +103,19 @@ public class SegurancaServiceImpl implements SegurancaService {
     }
     
     @Override
+    //@PreAuthorize("hasRole('ADMIN')")
     public List<Cliente> buscarTodosClientes(){
         return clienteRepo.findAll();
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public List<Autorizacao>  listarAutorizacoes(){
         return autRepo.findAll();
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public Cliente buscarClientePorId(Long id){
         Optional<Cliente> clienteOp = clienteRepo.findById(id);
         if(clienteOp.isPresent()) {
@@ -107,6 +125,7 @@ public class SegurancaServiceImpl implements SegurancaService {
     }
 
     @Override
+    @PreAuthorize("isAuthenticated()")
     public Cliente buscarClientePorNome(String nome){
         Cliente cliente = clienteRepo.findByNome(nome);
         if(cliente != null) {
@@ -116,6 +135,7 @@ public class SegurancaServiceImpl implements SegurancaService {
     }
 
     @Override
+    @PreAuthorize("isAuthenticated()")
     public Autorizacao buscarAutorizacaoPorNome(String nome){
         Autorizacao autorizacao = autRepo.findByNome(nome);
         if(autorizacao != null){
@@ -125,12 +145,14 @@ public class SegurancaServiceImpl implements SegurancaService {
     }
 
     @Override
+    @PreAuthorize("isAuthenticated()")
     public List<Pedido> listarPedidos(){
         return pedidoRepo.findAll();
     }
 
 
     @Override
+    @PreAuthorize("isAuthenticated()")
     public Pedido buscarPedidoPorId(Long id){
         Pedido pedido = pedidoRepo.buscarPedidoPorId(id);
         if(pedido != null) {
@@ -142,6 +164,7 @@ public class SegurancaServiceImpl implements SegurancaService {
     
 
     @Override
+    @PreAuthorize("isAuthenticated()")
     public Pedido buscarPedidoPorDescricao(String desc){
         Pedido pedido = pedidoRepo.buscarPedidoPorDescricao(desc);
         if(pedido != null){
@@ -174,6 +197,19 @@ public class SegurancaServiceImpl implements SegurancaService {
             return cliente.get();
         }
         throw new RegNotFoundException("Cliente inexistente");
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        Cliente cliente = clienteRepo.findByNome(username);
+        if (cliente == null) {
+            throw new UsernameNotFoundException("Usuário " + username + " não encontrado!");
+        }
+        return User.builder().username(username).password(cliente.getSenha())
+                .authorities(cliente.getAutorizacoes().stream().map(Autorizacao::getNome).collect(Collectors.toList())
+                        .toArray(new String[cliente.getAutorizacoes().size()]))
+                .build();
     }
 
     // public Cliente atualizarCliente(Cliente cliente, Cliente novoCliente) {

@@ -2,6 +2,7 @@ package br.gov.sp.fatec.projetomineda.controller;
 
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonView;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,8 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.gov.sp.fatec.projetomineda.entity.Cliente;
+import br.gov.sp.fatec.projetomineda.exception.RegNotFoundException;
+import br.gov.sp.fatec.projetomineda.repository.ClienteRepository;
 import br.gov.sp.fatec.projetomineda.services.SegurancaService;
 
 @RestController
@@ -29,6 +32,9 @@ public class ClienteController {
     
     @Autowired
     private SegurancaService segurancaService;
+
+    @Autowired
+    private ClienteRepository clienteRepo;
 
     @JsonView(View.ClienteResumo.class)
     @GetMapping

@@ -2,11 +2,13 @@ package br.gov.sp.fatec.projetomineda.services;
 
 import java.util.List;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
+
 import br.gov.sp.fatec.projetomineda.entity.Autorizacao;
 import br.gov.sp.fatec.projetomineda.entity.Cliente;
 import br.gov.sp.fatec.projetomineda.entity.Pedido;
 
-public interface SegurancaService {
+public interface SegurancaService extends UserDetailsService{
 
     public Cliente criarCliente(String nome, String email, String senha, String autorizacao);
     public Pedido criarPedido(String desc, double price, String email);
